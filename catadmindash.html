@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style type="text/css">
+  
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 320px;
+  margin: auto;
+  text-align: left;
+  margin-top: 10px;
+}
+img{
+  width:300px;
+  height:300px;
+}
+.row{
+  border:0px;
+  padding-top: 0px;
+}
+.col-xs{
+  padding:30px; 
+}
+</style>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light"  style="background-color: #e3f2fd;">
+  <a class="navbar-brand" href="#">TeamRed</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <a class="nav-item nav-link active" href="admindashboard.html">Dashboard <span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" href="AddProduct.html">AddItem</a>
+      <a class="nav-item nav-link" href="#">Cart</a>
+      <a class="nav-item nav-link" href="#">MyAccount</a>
+    </div>
+  </div>
+</nav>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+  
+const api_url ="http://localhost:9000/product/details";
+  
+// Defining async function
+var url_string = window.location;
+var url = new URL(url_string);
+var cat = url.searchParams.get("cat");
+async function getapi(url) {
+    
+    // Storing response
+    const response = await fetch(url);
+    
+    // Storing data in form of JSON
+    var data = await response.json();
+    console.log(data);
+    show(data);
+}
+// Calling that async function
+getapi(api_url);
+
+// Function to define innerHTML for HTML table
+function show(data) {
+    let tab = `
+      <div class="container" style="border:2px;">
+          <div class="row">`;
+    // Loop to access all rows 
+    for (let r of data) {
+      if(r.category == cat){
+        tab += `
+            <div class="col-xs">
+              <div class="card">
+                <img src="images/${r.imageref}">
+                <p style="text-align: center">${r.name}</p>
+                <p style="text-align: center">Price : ${r.unitprice}</p>          
+                <button type="submit" onclick="redirect(${r.productid})">View Now</button>
+                <button type="submit" style="background-color:#D82148" onclick="deleted(${r.productid})">Delete</button>
+              </div>
+          </div>
+        `;
+      }
+        
+    }
+    tab+=`  </div>
+    </div>`
+    document.getElementById("products").innerHTML = tab;
+}
+</script>
+<script type="text/javascript">
+    
+    redirect = async function (_id) {
+            window.location.href = `adminproduct.html?_id=${_id}`
+             
+    }
+    
+    deleted = async function (_id) {
+            let data = {
+                
+                "productid": _id,
+            }
+            console.log(data)
+            const response = await axios.get('http://localhost:9000/product/remove/'+data.productid+'', data);
+            location.reload();
+            console.log(response);
+            if (response.status == 200) {
+                if (response.data.userId) {
+                    if (response.data.userType == "Customer") {
+                        window.location.href = "dashboard.html"
+                    } else if (response.data.userType == "admin") {
+                        window.location.href = "admindashboard.html"
+                    }
+                } 
+            } 
+    }
+
+</script>
+<div id="products"></div>
+</body>
+</html>

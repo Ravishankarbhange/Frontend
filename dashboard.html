@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style type="text/css">
+	
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 320px;
+  margin: auto;
+  text-align: left;
+  margin-top: 10px;
+}
+img{
+	width:300px;
+	height:300px;
+}
+.row{
+	border:0px;
+	padding-top: 0px;
+}
+.col-xs{
+	padding:30px; 
+}
+</style>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light"  style="background-color: #e3f2fd;">
+  <a class="navbar-brand" href="#">TeamRed</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <a class="nav-item nav-link active" href="#">Dashboard <span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" href="#">Cart</a>
+      <a class="nav-item nav-link" href="#">MyAccount</a>
+    </div>
+  </div>
+</nav>
+
+<script type="text/javascript">
+  
+const api_url ="http://localhost:9000/product/details";
+  
+// Defining async function
+async function getapi(url) {
+    
+    // Storing response
+    const response = await fetch(url);
+    
+    // Storing data in form of JSON
+    var data = await response.json();
+    console.log(data);
+    show(data);
+}
+// Calling that async function
+getapi(api_url);
+
+// Function to define innerHTML for HTML table
+function show(data) {
+    let tab = `
+      <div class="container" style="border:2px;">
+          <div class="row">`;
+    // Loop to access all rows 
+    for (let r of data) {
+        tab += `
+            <div class="col-xs">
+              <div class="card">
+                <img src="images/${r.imageref}">
+                <p style="text-align: center">${r.name}</p>
+                <p style="text-align: center">Price : ${r.unitprice}</p>          
+                <button type="submit" onclick="redirect(${r.productid})">View Now</button>
+              </div>
+          </div>
+        `;
+    }
+    tab+=`  </div>
+    </div>`
+    document.getElementById("products").innerHTML = tab;
+}
+</script>
+<script type="text/javascript">
+    
+    redirect = async function (_id) {
+            window.location.href = `productpage.html?_id=${_id}`
+             
+    }
+
+    category = async function (cat) {
+            window.location.href = `catdashboard.html?cat=${cat}`
+             
+    }
+
+</script>
+<div class="jumbotron">
+	<div class="container" style="border:2px;">
+        <div class="row">
+        	<div class="col-xs">
+              <div class="card">
+              	<img src="images/homeappliances.jpg">        
+                <button type="submit" onclick="category('homeappliances')" style="background-color: #D82148">Home Appliances</button>
+              </div>
+          	</div>
+          	<div class="col-xs">
+              <div class="card">
+              	<img src="images/cloths.jpg">        
+                <button type="submit" onclick="category('cloth')" style="background-color: #D82148">Cloths</button>
+              </div>
+          	</div>
+          	<div class="col-xs">
+              <div class="card">
+              	<img src="images/footwear.jpg">        
+                <button type="submit" onclick="category('footwear')" style="background-color: #D82148">Footwear</button>
+              </div>
+          	</div>
+        </div>
+    </div>
+
+</div>
+<div id="products"></div>
+</body>
+</html>

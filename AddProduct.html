@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style type="text/css">
+	
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 920px;
+  margin: auto;
+  text-align: left;
+  margin-top: 50px;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+img{
+	width:300px;
+	height:300px;
+}
+.row{
+	border:0px;
+	padding-top: 0px;
+}
+.col-xs{
+	padding:1px; 
+}
+input{width: 100%;}
+td{padding:8px;}
+</style>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light"  style="background-color: #e3f2fd;">
+  <a class="navbar-brand" href="#">TeamRed</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <a class="nav-item nav-link" href="admindashboard.html">Dashboard <span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link active" href="AddProduct.html">AddItem</a>
+      <a class="nav-item nav-link" href="#">Cart</a>
+      <a class="nav-item nav-link" href="#">MyAccount</a>
+    </div>
+  </div>
+</nav>
+
+
+
+<div class="container" style="border:5px;">
+
+  <div class="card">
+    <center><h1>ADD PRODUCT</h1></center><br>
+    <table>
+      <tbody>
+        
+        <tr>
+          <td style="width: 35%" ><label>Product Name</label></td>
+          <td style="width: 65%" ><input type="text" name="pname"></td>
+        </tr>
+        <tr>
+          <td style="width: 35%" ><label>Description</label></td>
+          <td style="width: 65%;" ><input type="text" rows="4" cols="71" form="usrform" name="desc"></td>
+        </tr>
+        <tr>
+          <td style="width: 35%" ><label>Category</label></td>
+          <td style="width: 65%" ><input type="text" name="category"></td>
+        </tr>
+        <tr>
+          <td style="width: 35%" ><label>SubCategory</label></td>
+          <td style="width: 65%" ><input type="text" name="subcategory"></td>
+        </tr>
+        <tr>
+          <td style="width: 35%" ><label>Product UnitPrice</label></td>
+          <td style="width: 65%" ><input type="text" name="unitprice"></td>
+        </tr>
+        <tr>
+          <td style="width: 35%" ><label>Quantity</label></td>
+          <td style="width: 65%" ><input type="text" name="quantity"></td>
+        </tr>
+        <tr>
+          <td style="width: 35%" ><label>Image Ref</label></td>
+          <td style="width: 65%" ><input type="text" name="imageref"></td>
+        </tr>
+
+      </tbody>
+    </table>
+    <br><button type="submit" onclick="addproduct()">Add Product</button><br>
+  </div>
+
+</div>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        addproduct = async function () {
+            let data = {
+                "name": document.getElementsByName('pname')[0].value,
+                "description": document.getElementsByName('desc')[0].value,
+                "category": document.getElementsByName('category')[0].value,
+                "subcategory": document.getElementsByName('subcategory')[0].value,
+                "unitprice": document.getElementsByName('unitprice')[0].value,
+                "quantity": document.getElementsByName('quantity')[0].value,
+                "imageref": document.getElementsByName('imageref')[0].value
+            }
+            console.log(data)
+            const response = await axios.post('http://localhost:9000/product/addproduct', data);
+            console.log(response);
+            if (response.status == 200) {
+                console.log("Ravishankar Done");
+            } 
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<style type="text/css">
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 290px;
+  margin: auto;
+  text-align: left;
+  margin-top: 120px;
+  padding:45px;
+}
+.cr{
+	border-radius: 10px;
+	height:20px;
+	width: 100%;
+}
+.bb{
+	height: 35px;
+	width: 100%;
+	border-radius: 58px;
+	background-color: #9fd6a7;
+	font-size: 20px;
+}
+</style>
+<body>
+<center>
+	<div class="card">
+		<h3 style="text-align: center;font-size: 30px;">SIGN UP</h3>
+		<label style="font-size: 20px;">Email</label><br>
+		<input class="cr" type="text" name="emailId"><br><br>
+		<label style="font-size: 20px;">Password</label><br>
+		<input class="cr" type="password" name="password"><br><br>
+		<label style="font-size: 20px;">Confirm Password</label><br>
+		<input class="cr" type="password" name=""><br><br>
+		<label style="font-size: 20px;">User Type :</label>
+		<input type="radio" name="userType"  value="admin">
+  		<label for="html">Admin</label>
+  		<input type="radio" name="userType" value="Customer">
+  		<label for="css">Customer</label>
+		<br><br><br>
+		<center><button class="bb" type="submit" onclick="SignUp()">Sign Up</button><br><br>
+		<a href="login.html">login</a></center>
+	</div>
+</center>
+
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        SignUp = async function () {
+            let data = {
+                
+                "emailId": document.getElementsByName('emailId')[0].value,
+                "userType": document.querySelector('input[name="userType"]:checked').value,
+                "password": document.getElementsByName('password')[0].value
+            }
+            console.log(data)
+            const response = await axios.post('http://localhost:8080/login/user/signup', data);
+            console.log(response);
+            if (response.status == 200) {
+                if (response.data.userId) {
+                    if (response.data.userType == "Customer") {
+                        window.location.href = "dashboard.html"
+                    } else if (response.data.userType == "admin") {
+                        window.location.href = "admindashboard.html"
+                    }
+                } 
+            } 
+        }
+    </script>
+
+    
+</body>
+</html>

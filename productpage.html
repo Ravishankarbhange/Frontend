@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style type="text/css">
+	
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin: auto;
+  text-align: left;
+  margin-top: 50px;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+img{
+	width:400px;
+	height:400px;
+}
+.row{
+	border:0px;
+	padding-top: 10px;
+  padding-left: 150px;
+}
+.column {
+  float: left;
+  width: 50%;
+  padding: 5px;
+  border-color: green;
+}
+.col-xs{
+	padding:1px; 
+}
+input{width: 100%;}
+td{padding:8px;}
+</style>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light"  style="background-color: #e3f2fd;">
+  <a class="navbar-brand" href="#">TeamRed</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <a class="nav-item nav-link" href="dashboard.html">Dashboard <span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" href="#">Cart</a>
+      <a class="nav-item nav-link" href="#">MyAccount</a>
+    </div>
+  </div>
+</nav>
+
+
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+    var url_string = window.location;
+    var url = new URL(url_string);
+    var productId = url.searchParams.get("_id");
+        
+    
+    const api_url ='http://localhost:9000/product/detail/'+productId;
+  
+    // Defining async function
+    async function getapi(url) {
+        
+        // Storing response
+        const response = await fetch(url);
+        
+        // Storing data in form of JSON
+        var data = await response.json();
+        console.log(data);
+        show(data);
+    }
+    // Calling that async function
+    getapi(api_url);
+    
+    // Function to define innerHTML for HTML table
+    function show(data) {
+        let tab = `
+          <div class="row">
+          <div class="column" style="width:35%">
+              <img src="images/${data.imageref}">
+          </div>
+          <div class="column">
+            <table>
+              <tbody>`;
+        // Loop to access all rows 
+        tab += `
+                  <br><h5>${data.name}</h5><br>
+                  <tr>
+                    <td style="width: 5%;" >Description</td>
+                    <td style="width: 95%;" >: ${data.description}</td>
+                  </tr>
+                  <tr>
+                    <td style="width: 5%;" >Quantity</td>
+                    <td style="width: 95%;" >: ${data.quantity}</td>
+                  </tr>
+                  <tr>
+                    <td style="width: 5%;" >Price</td>
+                    <td style="width: 95%;" >: ${data.unitprice} Rs</td>
+                  </tr>     
+        `;   
+        tab+=`  
+                </tbody>
+              </table><br><br>
+              <table><tbody><tr>
+                  <td><button type="submit" onclick="" style="width:170px;background-color:#a7dea0">Buy Now</button></td>
+                  <td><button type="submit" onclick="" style="width:170px;background-color:#decca0">Add Cart</button></td>
+              </tr></tbody></table>
+            </div>
+          </div>`
+        document.getElementById("products").innerHTML = tab;
+    }
+    deleted = async function (_id) {
+            let data = {
+                
+                "productid": _id,
+            }
+            console.log(data)
+            const response = await axios.get('http://localhost:9000/product/remove/'+data.productid+'', data);
+            location.reload();
+            console.log(response);
+            if (response.status == 200) {
+                if (response.data.userId) {
+                    if (response.data.userType == "Customer") {
+                        window.location.href = "dashboard.html"
+                    } else if (response.data.userType == "admin") {
+                        window.location.href = "admindashboard.html"
+                    }
+                } 
+            } 
+    }
+</script>
+
+
+
+<div class="jumbotron" id="products">
+  
+        
+
+      
+  
+</div>
+
+
+
+
+
+</body>
+</html>
